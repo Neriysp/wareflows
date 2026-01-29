@@ -11,6 +11,17 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -48,6 +59,7 @@
             font-weight: 700;
             margin-bottom: 1rem;
             letter-spacing: -1px;
+            color: #ffffff;
             background: linear-gradient(90deg, #ffffff 0%, #e0e7ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -185,6 +197,10 @@
             margin-top: 1rem;
             color: #ffffff;
         }
+        
+        .success-message[role="status"] {
+            /* Ensures proper announcement by screen readers */
+        }
 
         .success-message.show {
             display: block;
@@ -253,18 +269,20 @@
             <h2 class="notification-title">Get Early Access</h2>
             <p>Be the first to know when we launch. Join our exclusive waitlist for early access and special pricing.</p>
             
-            <form class="email-form" id="notifyForm" onsubmit="return handleSubmit(event)">
+            <form class="email-form" id="notifyForm">
+                <label for="emailInput" class="visually-hidden">Email address</label>
                 <input 
                     type="email" 
                     class="email-input" 
                     placeholder="Enter your email address" 
                     required
                     id="emailInput"
+                    aria-label="Enter your email address for early access notification"
                 >
                 <button type="submit" class="submit-btn">Notify Me</button>
             </form>
 
-            <div class="success-message" id="successMessage">
+            <div class="success-message" id="successMessage" role="status" aria-live="polite">
                 ✓ Thanks! We'll notify you when we launch.
             </div>
         </div>
@@ -290,24 +308,25 @@
     </div>
 
     <script>
-        function handleSubmit(event) {
-            event.preventDefault();
-            
-            const emailInput = document.getElementById('emailInput');
-            const successMessage = document.getElementById('successMessage');
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('notifyForm');
             
-            // Show success message
-            successMessage.classList.add('show');
-            
-            // Hide form
-            form.style.display = 'none';
-            
-            // Log email (in production, this would send to a backend)
-            console.log('Email submitted:', emailInput.value);
-            
-            return false;
-        }
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const emailInput = document.getElementById('emailInput');
+                const successMessage = document.getElementById('successMessage');
+                
+                // Show success message
+                successMessage.classList.add('show');
+                
+                // Hide form
+                form.style.display = 'none';
+                
+                // Log email (in production, this would send to a backend)
+                console.log('Email submitted:', emailInput.value);
+            });
+        });
     </script>
 </body>
 </html>
